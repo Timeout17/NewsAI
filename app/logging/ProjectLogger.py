@@ -1,0 +1,3 @@
+
+class ProjectLoggerClass():
+    pass
