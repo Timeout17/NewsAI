@@ -1,11 +1,11 @@
-from fastapi import APIRouter, FastAPI, Depends
+from fastapi import APIRouter, Depends
 from app.Agent.LlmClient import LlmClientClass
 from app.clients.NewsClient import NewsClientClass
 from app.formatters.NewsDataFormater import NewsDataFormaterClass
 from app.logging.ProjectLogger import ProjectLoggerClass
 from app.orchestrators.NewsOrhestrators import NewsOrhestratorsClass
 
-router = APIRouter(prefix="/news", tags=["get"])
+router = APIRouter(prefix="/news", tags=["news"])
 
 llmclient: LlmClientClass = LlmClientClass()
 projectlogger: ProjectLoggerClass = ProjectLoggerClass()
@@ -21,7 +21,7 @@ def get_news_service():
     )
 
 
-@router.get("/")
+@router.get("/latest")
 async def get_is_summary(category: str, 
                          language: str, 
                          limit: int, 

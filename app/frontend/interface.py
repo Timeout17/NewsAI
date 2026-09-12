@@ -1,4 +1,9 @@
 import streamlit as st
+import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # HUN
 # Beállítjuk az oldalnak a nevét, és egy icont mellé
@@ -62,6 +67,17 @@ if submitted:
         st.session_state.loading = True
         try:
             with st.spinner("Fetching news..."):
-                st.write(news_number, news_language, news_topic)
+                BACKEND = os.getenv("BACKEND_URL")
+                response = requests.get(
+                    f"{BACKEND}/news/latest",
+                    params={
+                        "category": news_topic,
+                        "language": news_language,
+                        "limit": news_number
+                    })
+
+                data = response.json()
+                st.write(data)
+                
         finally:
-            st.session_state.loading = False
+            st.session_state.loading = False    
