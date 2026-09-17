@@ -1,9 +1,11 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from app.Agent.LlmClient import LlmClientClass
 from app.clients.NewsClient import NewsClientClass
 from app.formatters.NewsDataFormater import NewsDataFormaterClass
 from app.logging.ProjectLogger import ProjectLoggerClass
 from app.orchestrators.NewsOrhestrators import NewsOrhestratorsClass
+from app.models.Enum import Category, Language
+from app.middleware.rate_limiter import rate_limit
 
 router = APIRouter(prefix="/news", tags=["news"])
 
@@ -22,10 +24,11 @@ def get_news_service():
 
 
 @router.get("/latest")
-async def get_is_summary(category: str, 
-                         language: str, 
-                         limit: int, 
-                         orhestrator: NewsOrhestratorsClass = Depends(get_news_service)):
+async def get_is_summary(category: Category, 
+                         language: Language, 
+                         limit: int = Query(ge=1, le=10), 
+                         orhestrator: NewsOrhestratorsClass = Depends(get_news_service),
+                         _: None = Depends(rate_limit)):
 
     
     return await orhestrator.execute_pipeline(category, language, limit)
