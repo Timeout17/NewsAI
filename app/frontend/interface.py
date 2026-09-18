@@ -1,7 +1,9 @@
 import streamlit as st
-import requests
 import os
 from dotenv import load_dotenv
+from services.backend_client import fetch_news
+from services.background import executor
+
 
 load_dotenv()
 
@@ -26,6 +28,16 @@ st.set_page_config(
 
 if "loading" not in st.session_state: 
     st.session_state.loading = False
+
+if "future" not in st.session_state:
+    st.session_state.future = None
+
+if "news_data" not in st.session_state:
+    st.session_state.news_data = None
+
+if "error" not in st.session_state:
+    st.session_state.error = None
+
 
 st.title("Welcome to NewsAI Service⛅")
 
@@ -64,20 +76,54 @@ if submitted:
         st.error("Please select all options.")
 
     else:
-        st.session_state.loading = True
-        try:
-            with st.spinner("Fetching news..."):
-                BACKEND = os.getenv("BACKEND_URL")
-                response = requests.get(
-                    f"{BACKEND}/news/latest",
-                    params={
-                        "category": news_topic,
-                        "language": news_language,
-                        "limit": news_number
-                    })
+        st.session_state.news_data = None
+        st.session_state.error = None
+        
+        BACKEND = os.getenv("BACKEND_URL")
+        future = executor.submit(
+            fetch_news, 
+            f"{BACKEND}/news/latest",
+                {
+                    "category": news_topic,
+                    "language": news_language,
+                    "limit": news_number
+                }
+            )
 
-                data = response.json()
-                st.write(data)
-                
-        finally:
-            st.session_state.loading = False    
+        st.session_state.future = future
+        st.session_state.loading = True
+
+        st.rerun()
+
+@st.fragment(run_every=0.5)
+def check_future():
+    future = st.session_state.future
+
+    if future is None:
+        return
+
+    if future.done():
+        try:
+            data = future.result()
+
+            st.session_state.loading = False
+            st.session_state.future = None
+            st.session_state.news_data = data
+
+            st.rerun()
+
+        except Exception as e:
+            st.session_state.loading = False
+            st.session_state.future = None
+            st.session_state.error = str(e)
+            st.rerun()
+
+
+check_future()
+
+if st.session_state.news_data is not None:
+    st.subheader("Latest news")
+    st.write(st.session_state.news_data)
+
+if st.session_state.error is not None:
+    st.write(st.session_state.error)
