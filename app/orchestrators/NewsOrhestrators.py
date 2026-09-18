@@ -20,5 +20,5 @@ class NewsOrhestratorsClass():
                         category: str,
                         language: str,
                         limit: int):
-        return f"This is the Category: {category}\nand this is the language: {language}\nand finally, the number of news: {limit}"
+        return f"This is the Category: {category.value}\nand this is the language: {language.value}\nand finally, the number of news: {limit}"
     
