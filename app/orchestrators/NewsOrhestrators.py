@@ -20,5 +20,9 @@ class NewsOrhestratorsClass():
                         category: str,
                         language: str,
                         limit: int):
-        return f"This is the Category: {category.value}\nand this is the language: {language.value}\nand finally, the number of news: {limit}"
+        
+        url_list = await self.newsclient.search_for_news(topic=category, language=language, limit=limit)
+        news = await self.newsclient.get_full_news(url_list)
+
+        return "\n""Other News""\n".join(news)
     

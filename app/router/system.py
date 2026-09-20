@@ -30,5 +30,13 @@ async def get_is_summary(category: Category,
                          orhestrator: NewsOrhestratorsClass = Depends(get_news_service),
                          _: None = Depends(rate_limit)):
 
+    # DEBUG SOROK: Ez kiírja a terminálba, hogy mi micsoda valójában!
+    print(f"DEBUG - orhestrator típus: {type(orhestrator)}")
+    print(f"DEBUG - category érték: {category.value if hasattr(category, 'value') else category}")
+    
+    # Próbáljuk meg tiszta stringként átadni az Enum értékeket (.value)
+    cat_str = category.value if hasattr(category, "value") else category
+    lang_str = language.value if hasattr(language, "value") else language
+
     
     return await orhestrator.execute_pipeline(category, language, limit)

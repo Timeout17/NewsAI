@@ -55,7 +55,9 @@ with st.form("my_form"):
                                placeholder="Select a number")
     
     news_topic = st.selectbox("Pick a Topic", 
-                              ["Law", "Economy", "War"], 
+                              ["General", "World", "Nation", 
+                               "Business", "Technology", "Entertainment", 
+                               "Sports", "Science", "Health"], 
                               index=None, 
                               placeholder="Select a topic")
     
