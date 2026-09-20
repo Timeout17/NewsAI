@@ -7,7 +7,12 @@ class Language(str, Enum):
 
 
 class Category(str, Enum):
-    LAW = "Law"
-    ECONOMY = "Economy"
-    WAR = "War"
-
+    GENERAL = "General"
+    WORLD = "World"
+    NATION = "Nation"
+    BUSINESS = "Business"
+    TECHNOLOGY = "Technology"
+    ENTErRTAINMENT = "Entertainment"
+    SPORTS = "Sports"
+    SCIENCE = "Science"
+    HEALTH = "Health"
