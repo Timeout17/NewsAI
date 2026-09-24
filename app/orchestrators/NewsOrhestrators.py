@@ -1,7 +1,7 @@
 from app.logging.ProjectLogger import ProjectLoggerClass
 from app.formatters.NewsDataFormater import NewsDataFormaterClass
 from app.clients.NewsClient import NewsClientClass
-from app.Agent.LlmClient import LlmClientClass
+from app.orchestrators.LLMOrhestrators import LLMOrhestratorsClass
 
 class NewsOrhestratorsClass():
 
@@ -9,12 +9,12 @@ class NewsOrhestratorsClass():
                  projectlogger: ProjectLoggerClass,
                  formaters: NewsDataFormaterClass,
                  newsclient: NewsClientClass,
-                 llmclient: LlmClientClass):
+                 llmorhestrator: LLMOrhestratorsClass):
         
         self.projectlogger = projectlogger
         self.formaters = formaters
         self.newsclient = newsclient
-        self.llmclient = llmclient
+        self.llmorhestrator = llmorhestrator
 
     async def execute_pipeline(self, 
                         category: str,
@@ -24,5 +24,4 @@ class NewsOrhestratorsClass():
         url_list = await self.newsclient.search_for_news(topic=category, language=language, limit=limit)
         news = await self.newsclient.get_full_news(url_list)
 
-        return "\n""Other News""\n".join(news)
-    
+        Agentorhestrator = await self.llmorhestrator.Chatservice(news)

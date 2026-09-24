@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Query
-from app.Agent.LlmClient import LlmClientClass
+from app.orchestrators.LLMOrhestrators import LLMOrhestratorsClass
 from app.clients.NewsClient import NewsClientClass
 from app.formatters.NewsDataFormater import NewsDataFormaterClass
 from app.logging.ProjectLogger import ProjectLoggerClass
@@ -9,7 +9,7 @@ from app.middleware.rate_limiter import rate_limit
 
 router = APIRouter(prefix="/news", tags=["news"])
 
-llmclient: LlmClientClass = LlmClientClass()
+llmorhestrators: LLMOrhestratorsClass = LLMOrhestratorsClass()
 projectlogger: ProjectLoggerClass = ProjectLoggerClass()
 newsclient: NewsClientClass = NewsClientClass()
 newsdataformater: NewsDataFormaterClass = NewsDataFormaterClass()
@@ -19,7 +19,7 @@ def get_news_service():
         projectlogger,
         newsdataformater,
         newsclient,
-        llmclient
+        llmorhestrators
     )
 
 
