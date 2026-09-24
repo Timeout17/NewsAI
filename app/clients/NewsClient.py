@@ -77,5 +77,4 @@ class NewsClientClass():
                 return f"Hiba a scraping során: {e}"
 
         return news
-# === ÍGY KÖTÖD ÖSSZE A GNEWS API-VAL ===
-# 2. LÉPÉS: A main függvénynek is ASYNC-nek kell lennie!
+
