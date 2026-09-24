@@ -1,5 +1,6 @@
 import httpx
 from bs4 import BeautifulSoup
+from app.models.Message import MessageClass
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -44,9 +45,9 @@ class NewsClientClass():
         
         return self.urls
     """
-    async def get_full_news(self, url_list):
+    async def get_full_news(self, url_list) -> list[MessageClass]:
 
-        news: list[str] = []
+        news: list[MessageClass] = []
 
         for url in url_list:
             try:
@@ -58,6 +59,14 @@ class NewsClientClass():
 
                     soup = BeautifulSoup(response.text, "html.parser")
 
+                    title_element = soup.find("h1")
+
+                    if title_element:
+                        title = title_element.get_text(strip=True)
+                    elif soup.title:
+                        title = soup.title.get_text(strip=True)
+                    else:
+                        title = "Unknown title"
 
                     for trash in soup(["script", "style", "nav", "footer", "header", "aside"]):
                         trash.decompose()
@@ -72,7 +81,10 @@ class NewsClientClass():
 
                     if not full_text:
                         return "Nem sikerült szöveges tartalmat kinyerni az oldalból."
-                    news.append(full_text)
+
+                    message = MessageClass(title, url, full_text)
+
+                    news.append(message)
             except Exception as e:
                 return f"Hiba a scraping során: {e}"
 
