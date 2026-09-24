@@ -16,3 +16,8 @@ class Category(str, Enum):
     SPORTS = "Sports"
     SCIENCE = "Science"
     HEALTH = "Health"
+
+class Roles(str, Enum):
+    USER: str = "user"
+    ASSISTANT: str = "assistant"
+    SYSTEM: str = "system"
