@@ -14,13 +14,11 @@ class NewsClientClass():
     API_KEY = os.getenv("GNEWS_API_KEY")
 
     urls: list[str] = []
-
+    """
     async def search_for_news(self, topic: str, language: str, limit: int):
         return ["https://www.hindustantimes.com/cities/lucknow-news/how-the-aliganj-fake-call-centre-in-lucknow-trapped-us-victims-101789831325556.html",
                             "https://www.bgr.com/2257582/is-google-chrome-more-secure-microsoft-edge/"]
-        
-
-    """
+    """ 
 
     async def search_for_news(self, topic: str, language: str, limit: int):
 
@@ -29,7 +27,7 @@ class NewsClientClass():
         if not base_url.endswith("?"):
             base_url += "?"
 
-        url: str = f"{base_url}q={topic}&lang={language}&max={limit}&apikey={self.API_KEY}"
+        url: str = f"{base_url}q={topic.value}&lang={language.value}&max={limit}&apikey={self.API_KEY}"
 
         async with httpx.AsyncClient() as client:
 
@@ -44,7 +42,7 @@ class NewsClientClass():
            self.urls.append(index["url"])
         
         return self.urls
-    """
+    
     async def get_full_news(self, url_list) -> list[MessageClass]:
 
         news: list[MessageClass] = []
@@ -80,13 +78,17 @@ class NewsClientClass():
                     full_text = "\n\n".join(clean_lines)
 
                     if not full_text:
-                        return "Nem sikerült szöveges tartalmat kinyerni az oldalból."
+                        print("Nem sikerült szöveges tartalmat kinyerni az oldalból.")
+                        continue
 
                     message = MessageClass(title, url, full_text)
+                    print(type(news))
+                    print(news)
 
                     news.append(message)
             except Exception as e:
-                return f"Hiba a scraping során: {e}"
+                print(f"Hiba a scraping során: {e}")
+                continue
 
         return news
 
