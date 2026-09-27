@@ -24,4 +24,9 @@ class NewsOrhestratorsClass():
         url_list = await self.newsclient.search_for_news(topic=category, language=language, limit=limit)
         news = await self.newsclient.get_full_news(url_list)
 
-        Agentorhestrator = await self.llmorhestrator.Chatservice(news)
+        result = await self.llmorhestrator.Chatservice(news, language)
+
+        final_result = "\n\n".join(result)
+
+        return final_result
+

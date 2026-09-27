@@ -3,18 +3,36 @@ from app.models.Enum import Roles
 class CreateMessageClass():
 
     @staticmethod
-    def create_message(message: str, language: str):
-        return [
+    def create_message(message: str, language: str, url: str, title: str):
+            return [
             {
                 "role": Roles.SYSTEM.value,
-                "content":f"""
-                    kapni fogsz, angol más nyelvű szövegeket, ezeket fordítse le: {language}
-                    Ezeket a hírekeket rövidísd is le, csak a lényeget írd ki belőlük, kb 5-6 mondatban legyenek.
-                    """
-            },
+                "content": f"""
+                You will receive a news article.
 
+                Translate the article into {language}.
+                Summarize it in approximately 5-6 sentences.
+                Include only the most important information.
+
+                Format the response as:
+
+                # TITLE
+
+                URL
+
+                CONTENT
+
+                Highlight important events in bold.
+                """
+            },
             {
                 "role": Roles.USER.value,
-                "content": message
+                "content": f"""
+                Title: {title}
+                URL: {url}
+
+                Article:
+                {message}
+                """
             }
-        ]
+    ]
