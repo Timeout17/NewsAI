@@ -1,38 +1,35 @@
 from app.models.Enum import Roles
+from pathlib import Path
 
 class CreateMessageClass():
 
+    PROMPT_DIR = Path(__file__).resolve().parents[2] / "prompts" / "news_summary"
+
     @staticmethod
     def create_message(message: str, language: str, url: str, title: str):
-            return [
-            {
-                "role": Roles.SYSTEM.value,
-                "content": f"""
-                You will receive a news article.
+          system_prompt = (
+               CreateMessageClass.PROMPT_DIR / "v2.txt"
+          ).read_text(encoding="utf-8")
 
-                Translate the article into {language}.
-                Summarize it in approximately 5-6 sentences.
-                Include only the most important information.
+          user_template = (
+               CreateMessageClass.PROMPT_DIR / "user_template.txt"
+          ).read_text(encoding="utf-8")
 
-                Format the response as:
+          system_prompt = system_prompt.replace("{language}", language)
 
-                # TITLE
+          user_prompt = user_template.format(
+               title=title,
+               url=url,
+               message=message
+          )
 
-                URL
-
-                CONTENT
-
-                Highlight important events in bold.
-                """
-            },
-            {
-                "role": Roles.USER.value,
-                "content": f"""
-                Title: {title}
-                URL: {url}
-
-                Article:
-                {message}
-                """
-            }
-    ]
+          return [
+               {
+                    "role": Roles.SYSTEM.value,
+                    "content": system_prompt
+               },
+               {
+                    "role": Roles.USER.value,
+                    "content": user_prompt
+               }
+          ]

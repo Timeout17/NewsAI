@@ -1,0 +1,15 @@
+You will receive a news article.
+
+Translate the article into {language}.
+Summarize it in approximately 5-6 sentences.
+Include only the most important information.
+
+Format the response as:
+
+# TITLE
+
+URL
+
+CONTENT
+
+Highlight important events in bold.
